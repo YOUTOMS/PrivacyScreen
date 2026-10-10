@@ -48,6 +48,12 @@ internal static class Win32
     public const uint MOD_WIN = 0x0008;
     public const uint MOD_NOREPEAT = 0x4000;   // 按住不放只触发一次
 
+    /// <summary>左右 Win 键的虚拟键码（.NET 的 Keys 枚举里拿不到“当前是否按住 Win”，只能问系统）。</summary>
+    public const int VK_LWIN = 0x5B;
+    public const int VK_RWIN = 0x5C;
+    /// <summary>Del 键（用于识别并拒绝系统保留的 Ctrl+Alt+Del）。</summary>
+    public const uint VK_DELETE = 0x2E;
+
     // ───────────────────────── 系统光标 ─────────────────────────
     public const uint SPI_SETCURSORS = 0x0057;
     public const uint SPIF_SENDCHANGE = 0x02;
@@ -73,6 +79,10 @@ internal static class Win32
 
     [DllImport("user32.dll", SetLastError = true)]
     public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+    /// <summary>查询某个键当前是否被按住（最高位为 1 表示按下）。</summary>
+    [DllImport("user32.dll")]
+    public static extern short GetAsyncKeyState(int vKey);
 
     /// <summary>关键 API：设置窗口是否参与屏幕捕获。</summary>
     [DllImport("user32.dll", SetLastError = true)]

@@ -132,6 +132,9 @@ internal sealed class TrayContext : ApplicationContext
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add(_hotkeyItem);
 
+        var hotkeySettings = new ToolStripMenuItem("快捷键设置…", null, (_, _) => ShowHotkeyDialog());
+        menu.Items.Add(hotkeySettings);
+
         var openCfg = new ToolStripMenuItem("打开配置文件夹", null, (_, _) =>
         {
             try
@@ -302,6 +305,40 @@ internal sealed class TrayContext : ApplicationContext
 
         var targets = MonitorHelper.Resolve(dlg.SelectedMonitorIds, monitors);
         EnterBlackout(targets);
+    }
+
+    /// <summary>快捷键可视化设置（对应 PRD FR-04）。</summary>
+    private void ShowHotkeyDialog()
+    {
+        // 遮罩是置顶的，会把设置窗口盖住；而且黑屏时“双击鼠标左键退出”的钩子会把
+        // 对话框里的点击也算进去，容易误触发。所以改键前先退出黑屏
+        // （反正要看见屏幕才能操作，这本来也是用户的预期）。
+        bool wasActive = _blackout.IsActive;
+        if (wasActive)
+        {
+            _blackout.Exit();
+            UpdateTrayState();
+        }
+
+        using var dlg = new HotkeySettingsForm(
+            _settings.ExitHotkey, _settings.BackupExitHotkey, _settings.EnterHotkey);
+
+        if (dlg.ShowDialog() != DialogResult.OK)
+        {
+            if (wasActive) Notify("快捷键未改动", $"屏幕已恢复正常。按 {_settings.EnterHotkey} 可再次黑屏。");
+            return;
+        }
+
+        _settings.ExitHotkey = dlg.ExitHotkey;
+        _settings.BackupExitHotkey = dlg.BackupExitHotkey;
+        _settings.EnterHotkey = dlg.EnterHotkey;
+        _settings.Save();
+
+        StartHotKeys();     // 立即按新键重新注册（FR-04：保存后立即生效）
+        UpdateTrayState();
+
+        Notify("快捷键已更新",
+            $"退出 {_settings.ExitHotkey} / 备用 {_settings.BackupExitHotkey} / 进入 {_settings.EnterHotkey}。已立即生效并保存。");
     }
 
     private void EnterBlackout(IReadOnlyList<MonitorItem> targets)
