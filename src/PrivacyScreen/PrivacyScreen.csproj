@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+
+    <!-- DPI：按显示器独立缩放（多屏 + 不同缩放比例也能精确铺满） -->
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+
+    <!-- 程序信息 -->
+    <AssemblyName>PrivacyScreen</AssemblyName>
+    <RootNamespace>PrivacyScreen</RootNamespace>
+    <Version>0.1.0</Version>
+    <Product>隐私屏</Product>
+    <AssemblyTitle>隐私屏 PrivacyScreen</AssemblyTitle>
+    <Company>PrivacyScreen</Company>
+    <Description>一键让显示器全黑，看起来像关机；电脑仍正常运行，远程可见正常桌面。</Description>
+
+    <!-- 允许“相关文件”（如 .cur/.png）参与生成，避免误报 -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <InvariantGlobalization>true</InvariantGlobalization>
+
+    <!-- 发布：单文件、尺寸优先（依赖本机已装的 .NET 8 桌面运行时） -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <DebugType>none</DebugType>
+    <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
+  </PropertyGroup>
+
+</Project>

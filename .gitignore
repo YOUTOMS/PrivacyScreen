@@ -1,0 +1,19 @@
+# ─────────── 编译产物 ───────────
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# ─────────── 发布产物 ───────────
+# exe 通过 GitHub Releases 分发，不放代码仓库（否则历史里永久背着 63 MB）
+dist/
+dist-standalone/
+
+# ─────────── 本地工作记录 ───────────
+.workbuddy/
+
+# ─────────── 系统文件 ───────────
+Thumbs.db
+desktop.ini
+.DS_Store
